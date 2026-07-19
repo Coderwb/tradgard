@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Trädgårdsservice</title>
+    <title>Min Trädgårdsservice - Boxholm</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,6 +21,16 @@
             box-shadow: 0 4px 15px rgba(0,255,0,0.1);
         }
         h1 { color: #4CAF50; font-size: 2.5rem; margin-bottom: 5px; }
+        .location-badge {
+            background-color: #ff9800;
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
         .subtitle { color: #888; margin-bottom: 25px; }
         .price-box {
             background: #2a2a2a;
@@ -37,8 +47,7 @@
             align-items: center;
         }
         .input-group label { margin-right: 10px; font-size: 14px; color: #ccc; }
-        input[type="number"] {
-            width: 80px;
+        input[type="number"], input[type="text"] {
             padding: 8px;
             border-radius: 5px;
             border: 1px solid #444;
@@ -46,6 +55,8 @@
             color: white;
             font-size: 16px;
         }
+        input[type="number"] { width: 80px; }
+        input[type="text"] { width: 100%; box-sizing: border-box; }
         .checkbox-group {
             margin-top: 10px;
             display: flex;
@@ -93,7 +104,15 @@
 
 <div class="container">
     <h1>Hjälp i Trädgården! 🌿</h1>
+    <div class="location-badge">📍 GÄLLER ENDAST I BOXHOLM</div>
     <p class="subtitle">Boka och räkna ut ditt pris direkt nedanför</p>
+
+    <!-- Adressfält -->
+    <div class="price-box" style="border-left-color: #ff9800;">
+        <h3>🏡 Din adress i Boxholm</h3>
+        <p style="font-size: 14px; color: #aaa; margin-bottom: 8px;">Skriv din gata och husnummer så jag hittar till dig:</p>
+        <input type="text" id="adress" placeholder="Ex: Storgatan 12">
+    </div>
 
     <!-- Tjänst 1 -->
     <div class="price-box">
@@ -137,43 +156,45 @@
 
 <script>
     function raknaUtPris() {
-        // Hämta värden från sidan
         let trimMeter = parseFloat(document.getElementById('trim').value) || 0;
         let ograsMeter = parseFloat(document.getElementById('ogras').value) || 0;
         let villVattna = document.getElementById('vattna').checked;
 
-        // Räkna ut priserna utifrån dina regler
         let trimPris = (trimMeter / 10) * 20;
         let ograsPris = (ograsMeter / 15) * 50;
         let vattnaPris = villVattna ? 300 : 0;
 
-        // Avrunda till jämna kronor
         let totalt = Math.round(trimPris + ograsPris + vattnaPris);
-
-        // Visa summan på skärmen
         document.getElementById('summa').innerText = totalt;
     }
 
     function oppnaSwish() {
         let totaltBelopp = document.getElementById('summa').innerText;
+        let adressen = document.getElementById('adress').value.trim();
         let telefonNummer = "0723782629";
-        let meddelande = encodeURIComponent("Trädgårdshjälp");
 
-        // Skapa den speciella Swish-länken som öppnar appen på telefonen
-        let swishUrl = "swish://payment?data=" + JSON.stringify({
-            "version": 1,
-            "payee": { "value": telefonNummer },
-            "amount": { "value": parseInt(totaltBelopp) },
-            "message": { "value": "Trädgårdshjälp" }
-        });
+        // Kontrollera att de skrivit en adress
+        if (adressen == "") {
+            alert("Du måste skriva in din adress i Boxholm för att kunna boka!");
+            return;
+        }
 
-        // Om kunden har 0 kr i kundvagnen, varna dem
+        // Kontrollera att de har valt något att betala för
         if (totaltBelopp == "0") {
             alert("Vänligen fyll i vad du vill ha hjälp med först!");
             return;
         }
 
-        // Öppna Swish
+        // Lägg till adressen i Swish-meddelandet så du ser var du ska gå!
+        let meddelandeText = "Trädgårdshjälp på " + adressen;
+
+        let swishUrl = "swish://payment?data=" + JSON.stringify({
+            "version": 1,
+            "payee": { "value": telefonNummer },
+            "amount": { "value": parseInt(totaltBelopp) },
+            "message": { "value": meddelandeText }
+        });
+
         window.location.href = swishUrl;
     }
 </script>
