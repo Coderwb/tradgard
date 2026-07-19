@@ -124,20 +124,20 @@
     <!-- Tjänst 1 -->
     <div class="price-box">
         <h3>✂️ Trimma trädgården</h3>
-        <p>Pris: 20 kr per 10 meter</p>
+        <p>Pris: 20 kr per 10 meter (måste väljas i jämna 10-tal)</p>
         <div class="input-group">
             <label for="trim">Hur många meter?</label>
-            <input type="number" id="trim" min="0" value="0" oninput="raknaUtPris()">
+            <input type="number" id="trim" min="0" step="10" value="0" oninput="raknaUtPris()" onchange="valideraSteg(this, 10)">
         </div>
     </div>
 
     <!-- Tjänst 2 -->
     <div class="price-box">
         <h3>🌱 Rensa ogräs</h3>
-        <p>Pris: 50 kr för 15 meter</p>
+        <p>Pris: 50 kr för 15 meter (måste väljas i jämna 15-tal)</p>
         <div class="input-group">
             <label for="ogras">Hur många meter?</label>
-            <input type="number" id="ogras" min="0" value="0" oninput="raknaUtPris()">
+            <input type="number" id="ogras" min="0" step="15" value="0" oninput="raknaUtPris()" onchange="valideraSteg(this, 15)">
         </div>
     </div>
 
@@ -163,7 +163,6 @@
 
 <script>
     // 🛑 HÄR LÅSER DU DATUM FÖR ALLA!
-    // Skriv in de dagar du redan är bokad (Format: "ÅÅÅÅ-MM-DD")
     const bokadeDatum = [
         "2026-07-24",
         "2026-07-25"
@@ -176,11 +175,21 @@
     function kollaBokatDatum() {
         let valtDatum = document.getElementById('datum').value;
         
-        // Om kunden väljer ett låst datum får de en varning
         if (bokadeDatum.includes(valtDatum)) {
             alert("Tyvärr är jag redan bokad eller upptagen detta datum! Vänligen välj en annan dag.");
             document.getElementById('datum').value = "";
         }
+    }
+
+    // Funktion som avrundar manuellt inskrivna tal till närmaste godkända intervall
+    function valideraSteg(inputElement, steg) {
+        let värde = parseFloat(inputElement.value) || 0;
+        if (värde < 0) värde = 0;
+        
+        // Avrunda till närmaste godkända steg (t.ex. närmaste 10 eller 15)
+        let avrundat = Math.round(värde / steg) * steg;
+        inputElement.value = avrundat;
+        raknaUtPris();
     }
 
     function raknaUtPris() {
@@ -197,6 +206,10 @@
     }
 
     function oppnaSwish() {
+        // Tvinga en extra validering av stegen innan betalning ifall de skrev manuellt precis innan klick
+        valideraSteg(document.getElementById('trim'), 10);
+        valideraSteg(document.getElementById('ogras'), 15);
+
         let totaltBelopp = document.getElementById('summa').innerText;
         let adressen = document.getElementById('adress').value.trim();
         let valtDatum = document.getElementById('datum').value;
