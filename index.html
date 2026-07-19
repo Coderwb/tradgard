@@ -20,35 +20,72 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,255,0,0.1);
         }
-        h1 { color: #4CAF50; font-size: 2.5rem; }
+        h1 { color: #4CAF50; font-size: 2.5rem; margin-bottom: 5px; }
+        .subtitle { color: #888; margin-bottom: 25px; }
         .price-box {
             background: #2a2a2a;
-            padding: 15px;
+            padding: 20px;
             margin: 15px 0;
             border-radius: 10px;
             border-left: 5px solid #4CAF50;
             text-align: left;
         }
-        .btn {
-            background-color: #4CAF50;
+        .price-box h3 { margin-top: 0; color: #4CAF50; }
+        .input-group {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .input-group label { margin-right: 10px; font-size: 14px; color: #ccc; }
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #333;
             color: white;
+            font-size: 16px;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .total-section {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border: 1px dashed #4CAF50;
+        }
+        .total-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .btn-pay {
+            background-color: transparent;
+            color: #ff3333;
+            border: 3px solid #ff3333;
             padding: 15px 32px;
-            font-size: 18px;
-            border: none;
+            font-size: 22px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             width: 100%;
             margin-top: 20px;
+            text-transform: uppercase;
+            transition: all 0.2s;
         }
-        .btn:hover { background-color: #45a049; }
-        input {
-            width: 80px;
-            padding: 8px;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-            margin-left: 10px;
+        .btn-pay:hover {
+            background-color: #ff3333;
+            color: white;
         }
     </style>
 </head>
@@ -56,26 +93,90 @@
 
 <div class="container">
     <h1>Hjälp i Trädgården! 🌿</h1>
-    <p>Behöver du hjälp med trädgården? Jag fixar det snabbt och smidigt!</p>
+    <p class="subtitle">Boka och räkna ut ditt pris direkt nedanför</p>
 
+    <!-- Tjänst 1 -->
     <div class="price-box">
         <h3>✂️ Trimma trädgården</h3>
         <p>Pris: 20 kr per 10 meter</p>
+        <div class="input-group">
+            <label for="trim">Hur många meter?</label>
+            <input type="number" id="trim" min="0" value="0" oninput="raknaUtPris()">
+        </div>
     </div>
 
+    <!-- Tjänst 2 -->
     <div class="price-box">
         <h3>🌱 Rensa ogräs</h3>
         <p>Pris: 50 kr för 15 meter</p>
+        <div class="input-group">
+            <label for="ogras">Hur många meter?</label>
+            <input type="number" id="ogras" min="0" value="0" oninput="raknaUtPris()">
+        </div>
     </div>
 
+    <!-- Tjänst 3 -->
     <div class="price-box">
         <h3>💧 Vattna växter</h3>
         <p>Pris: 300 kr för ALLA växter (använder ditt vatten)</p>
+        <div class="checkbox-group">
+            <input type="checkbox" id="vattna" onchange="raknaUtPris()">
+            <label for="vattna">Ja tack, vattna alla mina växter</label>
+        </div>
     </div>
 
-    <!-- Swish-nummer fyller du eller dina föräldrar i här sen -->
-    <button class="btn" onclick="alert('Ta en skärmdump på vad du vill ha hjälp med och skicka till mina föräldrar för att boka!')">BOKA HÄR</button>
+    <!-- Totalsumma -->
+    <div class="total-section">
+        <p>Din totalsumma att betala:</p>
+        <div class="total-price"><span id="summa">0</span> kr</div>
+    </div>
+
+    <!-- Röd BETALA-knapp -->
+    <button class="btn-pay" onclick="oppnaSwish()">Betala</button>
 </div>
+
+<script>
+    function raknaUtPris() {
+        // Hämta värden från sidan
+        let trimMeter = parseFloat(document.getElementById('trim').value) || 0;
+        let ograsMeter = parseFloat(document.getElementById('ogras').value) || 0;
+        let villVattna = document.getElementById('vattna').checked;
+
+        // Räkna ut priserna utifrån dina regler
+        let trimPris = (trimMeter / 10) * 20;
+        let ograsPris = (ograsMeter / 15) * 50;
+        let vattnaPris = villVattna ? 300 : 0;
+
+        // Avrunda till jämna kronor
+        let totalt = Math.round(trimPris + ograsPris + vattnaPris);
+
+        // Visa summan på skärmen
+        document.getElementById('summa').innerText = totalt;
+    }
+
+    function oppnaSwish() {
+        let totaltBelopp = document.getElementById('summa').innerText;
+        let telefonNummer = "0723782629";
+        let meddelande = encodeURIComponent("Trädgårdshjälp");
+
+        // Skapa den speciella Swish-länken som öppnar appen på telefonen
+        let swishUrl = "swish://payment?data=" + JSON.stringify({
+            "version": 1,
+            "payee": { "value": telefonNummer },
+            "amount": { "value": parseInt(totaltBelopp) },
+            "message": { "value": "Trädgårdshjälp" }
+        });
+
+        // Om kunden har 0 kr i kundvagnen, varna dem
+        if (totaltBelopp == "0") {
+            alert("Vänligen fyll i vad du vill ha hjälp med först!");
+            return;
+        }
+
+        // Öppna Swish
+        window.location.href = swishUrl;
+    }
+</script>
 
 </body>
 </html>
