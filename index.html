@@ -94,32 +94,9 @@
             text-transform: uppercase;
             transition: all 0.2s;
         }
-        .btn-pay:hover { background-color: #ff3333; color: white; }
-        
-        /* Admin-stilar */
-        .admin-panel {
-            margin-top: 40px;
-            padding: 10px;
-            background: #111;
-            border-radius: 8px;
-            display: inline-block;
-        }
-        .admin-btn {
-            background: none;
-            border: 1px solid #444;
-            color: #555;
-            cursor: pointer;
-            font-size: 11px;
-            padding: 5px 10px;
-            border-radius: 4px;
-        }
-        .admin-box {
-            display: none;
-            background: #222;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #ff9800;
+        .btn-pay:hover {
+            background-color: #ff3333;
+            color: white;
         }
     </style>
 </head>
@@ -130,19 +107,21 @@
     <div class="location-badge">📍 GÄLLER ENDAST I BOXHOLM</div>
     <p class="subtitle">Boka, välj dag och räkna ut ditt pris direkt nedanför</p>
 
+    <!-- Adressfält -->
     <div class="price-box" style="border-left-color: #ff9800;">
         <h3>🏡 Din adress i Boxholm</h3>
         <p style="font-size: 14px; color: #aaa; margin-bottom: 8px;">Skriv din gata och husnummer så jag hittar till dig:</p>
         <input type="text" id="adress" placeholder="Ex: Storgatan 12">
     </div>
 
+    <!-- Kalenderfält -->
     <div class="price-box" style="border-left-color: #00bcd4;">
         <h3>📅 Välj dag för trädgårdshjälp</h3>
         <p style="font-size: 14px; color: #aaa; margin-bottom: 8px;">Klicka nedanför och välj vilket datum du vill ha hjälp:</p>
         <input type="date" id="datum" onchange="kollaBokatDatum()">
     </div>
 
-    <!-- Tjänsterna -->
+    <!-- Tjänst 1 -->
     <div class="price-box">
         <h3>✂️ Trimma trädgården</h3>
         <p>Pris: 20 kr per 10 meter</p>
@@ -152,6 +131,7 @@
         </div>
     </div>
 
+    <!-- Tjänst 2 -->
     <div class="price-box">
         <h3>🌱 Rensa ogräs</h3>
         <p>Pris: 50 kr för 15 meter</p>
@@ -161,6 +141,7 @@
         </div>
     </div>
 
+    <!-- Tjänst 3 -->
     <div class="price-box">
         <h3>💧 Vattna växter</h3>
         <p>Pris: 300 kr för ALLA växter (använder ditt vatten)</p>
@@ -170,70 +151,35 @@
         </div>
     </div>
 
+    <!-- Totalsumma -->
     <div class="total-section">
         <p>Din totalsumma att betala:</p>
         <div class="total-price"><span id="summa">0</span> kr</div>
     </div>
 
+    <!-- Röd BETALA-knapp -->
     <button class="btn-pay" onclick="oppnaSwish()">Betala</button>
-
-    <!-- Hemlig Admin-panel längst ner -->
-    <div class="admin-panel">
-        <button class="admin-btn" onclick="loggaInAdmin()">🔒 Admin Loggin</button>
-        <div id="adminBox" class="admin-box">
-            <h4 style="color: #ff9800; margin: 0 0 10px 0;">Verktyg för dig</h4>
-            <p style="font-size: 12px; color: #ccc;">Välj ett datum i kalendern ovan och klicka på knapparna nedan:</p>
-            <button onclick="låsDatum()" style="background: #ff3333; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-weight: bold; margin-right: 5px;">Lås valt datum</button>
-            <button onclick="låsUppDatum()" style="background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-weight: bold;">Lås upp valt datum</button>
-        </div>
-    </div>
 </div>
 
 <script>
-    // 🛑 Permanenta bokade datum (Skriv in här för att de aldrig ska försvinna!)
+    // 🛑 HÄR LÅSER DU DATUM FÖR ALLA!
+    // Skriv in de dagar du redan är bokad (Format: "ÅÅÅÅ-MM-DD")
     const bokadeDatum = [
-        "2026-07-24"
+        "2026-07-24",
+        "2026-07-25"
     ];
 
+    // Sätter dagens datum som det tidigaste kunden kan välja
     let idag = new Date().toISOString().split('T');
     document.getElementById('datum').setAttribute('min', idag);
 
     function kollaBokatDatum() {
         let valtDatum = document.getElementById('datum').value;
+        
+        // Om kunden väljer ett låst datum får de en varning
         if (bokadeDatum.includes(valtDatum)) {
             alert("Tyvärr är jag redan bokad eller upptagen detta datum! Vänligen välj en annan dag.");
             document.getElementById('datum').value = "";
-        }
-    }
-
-    function loggaInAdmin() {
-        let lösenord = prompt("Skriv in ditt admin-lösenord:");
-        if (lösenord === "boxholm11") {
-            document.getElementById('adminBox').style.display = "block";
-            alert("Inloggad! Nu kan du använda verktygen här nedanför.");
-        } else {
-            alert("Fel lösenord!");
-        }
-    }
-
-    function låsDatum() {
-        let valt = document.getElementById('datum').value;
-        if (!valt) { alert("Välj ett datum i kalendern först!"); return; }
-        if (!bokadeDatum.includes(valt)) {
-            bokadeDatum.push(valt);
-            alert("Datum " + valt + " är nu låst för kunder!");
-            document.getElementById('datum').value = "";
-        }
-    }
-
-    function låsUppDatum() {
-        let valt = prompt("Skriv in datumet du vill låsa upp (ÅÅÅÅ-MM-DD):");
-        let index = bokadeDatum.indexOf(valt);
-        if (index > -1) {
-            bokadeDatum.splice(index, 1);
-            alert("Datum " + valt + " är nu upplåst igen!");
-        } else {
-            alert("Hittade inte det datumet i listan.");
         }
     }
 
@@ -256,18 +202,30 @@
         let valtDatum = document.getElementById('datum').value;
         let telefonNummer = "0723782629";
 
-        if (adressen == "" || valtDatum == "" || totaltBelopp == "0") {
-            alert("Fyll i adress, datum och vad du vill ha hjälp med först!");
+        if (adressen == "") {
+            alert("Du måste skriva in din adress i Boxholm för att kunna boka!");
+            return;
+        }
+
+        if (valtDatum == "") {
+            alert("Du måste välja ett datum i kalendern för när du vill ha hjälp!");
+            return;
+        }
+
+        if (totaltBelopp == "0") {
+            alert("Vänligen fyll i vad du vill ha hjälp med först!");
             return;
         }
 
         let meddelandeText = "Trädgårdshjälp " + valtDatum + ", " + adressen;
+
         let swishUrl = "swish://payment?data=" + JSON.stringify({
             "version": 1,
             "payee": { "value": telefonNummer },
             "amount": { "value": parseInt(totaltBelopp) },
             "message": { "value": meddelandeText }
         });
+
         window.location.href = swishUrl;
     }
 </script>
