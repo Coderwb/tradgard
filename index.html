@@ -144,7 +144,7 @@
     <!-- Tjänst 3 -->
     <div class="price-box">
         <h3>💧 Vattna växter</h3>
-        <p>Pris: 50 kr för ALLA växter (använder ditt vatten)</p>
+        <p>Pris: 30 kr för ALLA växter (använder ditt vatten)</p>
         <div class="checkbox-group">
             <input type="checkbox" id="vattna" onchange="raknaUtPris()">
             <label for="vattna">Ja tack, vattna alla mina växter</label>
@@ -199,7 +199,7 @@
 
         let trimPris = (trimMeter / 10) * 20;
         let ograsPris = (ograsMeter / 15) * 50;
-        let vattnaPris = villVattna ? 50 : 0;
+        let vattnaPris = villVattna ? 30 : 0;
 
         let totalt = Math.round(trimPris + ograsPris + vattnaPris);
         document.getElementById('summa').innerText = totalt;
