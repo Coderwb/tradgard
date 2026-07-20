@@ -164,11 +164,10 @@ function betala(){
     let efternamn = document.getElementById("efternamn").value.trim();
     let adress = document.getElementById("adress").value.toLowerCase();
     let datum = document.getElementById("datum").value;
-    let summa = document.getElementById("summa").innerText;
-
-    let vattna = document.getElementById("vattna").checked;
-    let ogras = document.getElementById("ogras").value;
-    let trim = document.getElementById("trim").value;
+    
+    // Hämtar texten och rensar bort allt som inte är siffror (t.ex. "kr" eller mellanslag)
+    let summaText = document.getElementById("summa").innerText.replace(/\D/g, "");
+    let summa = parseInt(summaText) || 0;
 
     if(fornamn === "" || efternamn === ""){
         alert("Du måste skriva förnamn och efternamn!");
@@ -185,7 +184,7 @@ function betala(){
         return;
     }
 
-    if(summa == 0){
+    if(summa === 0){
         alert("Välj minst en tjänst!");
         return;
     }
@@ -211,13 +210,18 @@ function betala(){
 
     let message = tjanstText + " - " + fornamn + " " + efternamn + ", " + datum;
 
-    let swish = "swish://payment?data=" + JSON.stringify({
-        version:1,
-        payee:{value:nummer},
-        amount:{value:parseInt(summa)},
-        message:{value:message}
-    });
+    // Skapa det korrekta JSON-objektet för Swish
+    let swishData = {
+        version: 1,
+        payee: { value: nummer },
+        amount: { value: summa },
+        message: { value: message }
+    };
 
+    // 🔥 Lagat: Gör om till JSON OCH URL-koda så att å, ä, ö, mellanslag och + fungerar!
+    let swish = "swish://payment?data=" + encodeURIComponent(JSON.stringify(swishData));
+
+    // Skicka till Swish-appen
     window.location.href = swish;
 
     document.getElementById("klart").style.display = "block";
