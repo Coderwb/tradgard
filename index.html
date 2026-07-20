@@ -47,7 +47,6 @@ h1 {
     border-left:5px solid #4CAF50;
 }
 
-/* Snyggar till så att bara textfält och nummerfält blir stora, inte kryssrutan */
 input[type="text"], input[type="number"], input[type="date"] {
     width:100%;
     padding:10px;
@@ -111,6 +110,7 @@ button:hover {
 <!-- ADRESS -->
 <div class="box">
 <h3>🏡 Adress</h3>
+<!-- 🔥 FIXAT: Rutan är nu helt tom och ren från start -->
 <input type="text" id="adress" placeholder="Ex: Storgatan 12">
 </div>
 
@@ -159,7 +159,6 @@ function rakna(){
     document.getElementById("summa").innerText = total;
 }
 
-// 🔥 LAGAT: Borttaget dubbla tagg-starter och trasig kod!
 function betala(){
     let fornamnEl = document.getElementById("fornamn");
     let efternamnEl = document.getElementById("efternamn");
@@ -174,7 +173,7 @@ function betala(){
 
     let fornamn = fornamnEl.value.trim();
     let efternamn = efternamnEl.value.trim();
-    let adress = adressEl.value.toLowerCase();
+    let adress = adressEl.value.trim();
     let datum = datumEl.value;
 
     let summaText = summaEl.innerText.replace(/\D/g, "");
@@ -193,8 +192,9 @@ function betala(){
         return;
     }
 
-    if(!adress.includes("boxholm")){
-        alert("Adressen måste vara i Boxholm!");
+    // 🔥 FIXAT: Kollar bara att kunden skrivit in sin adress
+    if(adress === ""){
+        alert("Du måste skriva din adress!");
         return;
     }
 
@@ -215,18 +215,18 @@ function betala(){
     }
 
     if(ogras > 0){
-        tjanster.push("Ogräs " + ogras + "h");
+        tjanster.push("Ogras " + ogras + "h");
     }
 
     if(trim > 0){
         tjanster.push("Trim " + trim + "h");
     }
 
-    let tjanstText = tjanster.join(" + ");
-    if(tjanstText === "") { tjanstText = "Trädgårdstjänst"; }
+    let tjanstText = tjanster.join(", ");
+    if(tjanstText === "") { tjanstText = "Tradgardstjanst"; }
 
     let nummer = "0723782629";
-    let message = tjanstText + " - " + fornamn + " " + efternamn + ", " + datum;
+    let message = tjanstText + " - " + fornamn + " " + efternamn;
 
     let swishData = {
         version: 1,
