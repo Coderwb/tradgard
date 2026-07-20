@@ -160,15 +160,40 @@ function rakna(){
 function betala(){
 <script>
 function betala(){
-    let fornamn = document.getElementById("fornamn").value.trim();
-    let efternamn = document.getElementById("efternamn").value.trim();
-    let adress = document.getElementById("adress").value.toLowerCase();
-    let datum = document.getElementById("datum").value;
-    
-    // Hämtar texten och rensar bort allt som inte är siffror (t.ex. "kr" eller mellanslag)
-    let summaText = document.getElementById("summa").innerText.replace(/\D/g, "");
+// Säkerställ att du har ett funktionsnamn här, t.ex: function skickaBestallning() {
+
+    // 1. Hämta alla textfält säkert
+    let fornamnEl = document.getElementById("fornamn");
+    let efternamnEl = document.getElementById("efternamn");
+    let adressEl = document.getElementById("adress");
+    let datumEl = document.getElementById("datum");
+    let summaEl = document.getElementById("summa");
+
+    // Krash-skydd: Om något fält saknas i HTML, stoppa direkt med en varning
+    if (!fornamnEl || !efternamnEl || !adressEl || !datumEl || !summaEl) {
+        alert("Ett eller flera textfält saknas i din HTML-kod!");
+        return;
+    }
+
+    let fornamn = fornamnEl.value.trim();
+    let efternamn = efternamnEl.value.trim();
+    let adress = adressEl.value.toLowerCase();
+    let datum = datumEl.value;
+
+    // Rensar bort allt som inte är siffror (t.ex "kr" eller mellanslag)
+    let summaText = summaEl.innerText.replace(/\D/g, "");
     let summa = parseInt(summaText) || 0;
 
+    // 2. 🔥 LAGAT: Deklarerar elementen korrekt så att skriptet inte kraschar här!
+    let vattnaEl = document.getElementById("vattna");
+    let ograsEl = document.getElementById("ogras");
+    let trimEl = document.getElementById("trim");
+
+    let vattna = vattnaEl ? vattnaEl.checked : false;
+    let ogras = ograsEl ? parseInt(ograsEl.value) || 0 : 0;
+    let trim = trimEl ? parseInt(trimEl.value) || 0 : 0;
+
+    // 3. Valideringar
     if(fornamn === "" || efternamn === ""){
         alert("Du måste skriva förnamn och efternamn!");
         return;
@@ -189,7 +214,7 @@ function betala(){
         return;
     }
 
-    // 🔥 Bygg tjänst-text automatiskt
+    // 4. Bygg tjänst-text automatiskt
     let tjanster = [];
 
     if(vattna){
@@ -205,12 +230,12 @@ function betala(){
     }
 
     let tjanstText = tjanster.join(" + ");
+    if(tjanstText === "") { tjanstText = "Trädgårdstjänst"; }
 
     let nummer = "0723782629";
-
     let message = tjanstText + " - " + fornamn + " " + efternamn + ", " + datum;
 
-    // Skapa det korrekta JSON-objektet för Swish
+    // 5. Bygg Swish-data enligt officiell standard
     let swishData = {
         version: 1,
         payee: { value: nummer },
@@ -218,15 +243,19 @@ function betala(){
         message: { value: message }
     };
 
-    // 🔥 Lagat: Gör om till JSON OCH URL-koda så att å, ä, ö, mellanslag och + fungerar!
-    let swish = "swish://payment?data=" + encodeURIComponent(JSON.stringify(swishData));
+    // Gör om till JSON och URL-koda strängen
+    let swishUrl = "swish://payment?data=" + encodeURIComponent(JSON.stringify(swishData));
 
-    // Skicka till Swish-appen
-    window.location.href = swish;
+    // 6. Skicka till Swish och visa klart-ruta
+    window.location.href = swishUrl;
 
-    document.getElementById("klart").style.display = "block";
+    let klartEl = document.getElementById("klart");
+    if (klartEl) {
+        klartEl.style.display = "block";
+    }
 }
 </script>
+
 
 </body>
 </html>
