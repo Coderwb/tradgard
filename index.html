@@ -158,18 +158,24 @@ function rakna(){
 }
 
 function betala(){
+    <script>
+function betala(){
     let fornamn = document.getElementById("fornamn").value.trim();
     let efternamn = document.getElementById("efternamn").value.trim();
     let adress = document.getElementById("adress").value.toLowerCase();
     let datum = document.getElementById("datum").value;
     let summa = document.getElementById("summa").innerText;
 
+    let vattna = document.getElementById("vattna").checked;
+    let ogras = document.getElementById("ogras").value;
+    let trim = document.getElementById("trim").value;
+
     if(fornamn === "" || efternamn === ""){
         alert("Du måste skriva förnamn och efternamn!");
         return;
     }
 
-    if(!adress.includes("")){
+    if(!adress.includes("boxholm")){
         alert("Adressen måste vara i Boxholm!");
         return;
     }
@@ -184,9 +190,26 @@ function betala(){
         return;
     }
 
+    // 🔥 Bygg tjänst-text automatiskt
+    let tjanster = [];
+
+    if(vattna){
+        tjanster.push("Vattning");
+    }
+
+    if(ogras > 0){
+        tjanster.push("Ogräs " + ogras + "h");
+    }
+
+    if(trim > 0){
+        tjanster.push("Trim " + trim + "h");
+    }
+
+    let tjanstText = tjanster.join(" + ");
+
     let nummer = "0723782629";
 
-    let message = "Trädgårdshjälp - " + fornamn + " " + efternamn + ", " + datum;
+    let message = tjanstText + " - " + fornamn + " " + efternamn + ", " + datum;
 
     let swish = "swish://payment?data=" + JSON.stringify({
         version:1,
