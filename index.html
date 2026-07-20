@@ -1,246 +1,204 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Trädgårdsservice - Boxholm</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,255,0,0.1);
-        }
-        h1 { color: #4CAF50; font-size: 2.5rem; margin-bottom: 5px; }
-        .location-badge {
-            background-color: #ff9800;
-            color: black;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .subtitle { color: #888; margin-bottom: 25px; }
-        .price-box {
-            background: #2a2a2a;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border-left: 5px solid #4CAF50;
-            text-align: left;
-        }
-        .price-box h3 { margin-top: 0; color: #4CAF50; }
-        .input-group {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .input-group label { margin-right: 10px; font-size: 14px; color: #ccc; }
-        input[type="number"], input[type="text"], input[type="date"] {
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-        }
-        input[type="number"] { width: 80px; }
-        input[type="text"], input[type="date"] { width: 100%; box-sizing: border-box; }
-        .checkbox-group {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .checkbox-group input {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .total-section {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 25px;
-            border: 1px dashed #4CAF50;
-        }
-        .total-price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4CAF50;
-        }
-        .btn-pay {
-            background-color: transparent;
-            color: #ff3333;
-            border: 3px solid #ff3333;
-            padding: 15px 32px;
-            font-size: 22px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 20px;
-            text-transform: uppercase;
-            transition: all 0.2s;
-        }
-        .btn-pay:hover {
-            background-color: #ff3333;
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trädgårdshjälp i Boxholm</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+    text-align:center;
+}
+
+.container {
+    max-width:700px;
+    margin:20px auto;
+    background:#111;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,255,150,0.2);
+}
+
+h1 {
+    color:#4CAF50;
+    font-size:2.5rem;
+}
+
+.badge {
+    background:#ff9800;
+    padding:5px 15px;
+    border-radius:20px;
+    color:black;
+    font-weight:bold;
+    display:inline-block;
+    margin-bottom:15px;
+}
+
+.box {
+    background:#1e1e1e;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+    text-align:left;
+    border-left:5px solid #4CAF50;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    border-radius:5px;
+    border:none;
+    background:#333;
+    color:white;
+}
+
+.total {
+    font-size:25px;
+    margin-top:15px;
+    color:#00ff99;
+}
+
+button {
+    width:100%;
+    padding:18px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    margin-top:20px;
+    cursor:pointer;
+    background:#ff3333;
+    color:white;
+    font-weight:bold;
+}
+
+button:hover {
+    background:#ff0000;
+}
+
+.success {
+    display:none;
+    margin-top:20px;
+    background:#00c853;
+    padding:15px;
+    border-radius:10px;
+    font-size:20px;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <h1>Hjälp i Trädgården! 🌿</h1>
-    <div class="location-badge">📍 GÄLLER ENDAST I BOXHOLM</div>
-    <p class="subtitle">Boka, välj dag och räkna ut ditt pris direkt nedanför</p>
+<h1>🌿 Trädgårdshjälp</h1>
+<div class="badge">📍 Endast Boxholm</div>
 
-    <!-- Adressfält -->
-    <div class="price-box" style="border-left-color: #ff9800;">
-        <h3>🏡 Din adress i Boxholm</h3>
-        <p style="font-size: 14px; color: #aaa; margin-bottom: 8px;">Skriv din gata och husnummer så jag hittar till dig:</p>
-        <input type="text" id="adress" placeholder="Ex: Storgatan 12">
-    </div>
+<p>En enklare och finare trädgård – utan stress!</p>
 
-    <!-- Kalenderfält -->
-    <div class="price-box" style="border-left-color: #00bcd4;">
-        <h3>📅 Välj dag för trädgårdshjälp</h3>
-        <p style="font-size: 14px; color: #aaa; margin-bottom: 8px;">Klicka nedanför och välj vilket datum du vill ha hjälp:</p>
-        <input type="date" id="datum" onchange="kollaBokatDatum()">
-    </div>
+<!-- NAMN -->
+<div class="box">
+<h3>👤 Ditt namn</h3>
+<input type="text" id="fornamn" placeholder="Förnamn">
+<input type="text" id="efternamn" placeholder="Efternamn">
+</div>
 
-    <!-- Tjänst 1 -->
-    <div class="price-box">
-        <h3>✂️ Trimma trädgården</h3>
-        <p>Pris: 20 kr per 10 meter (måste väljas i jämna 10-tal)</p>
-        <div class="input-group">
-            <label for="trim">Hur många meter?</label>
-            <input type="number" id="trim" min="0" step="10" value="0" oninput="raknaUtPris()" onchange="valideraSteg(this, 10)">
-        </div>
-    </div>
+<!-- ADRESS -->
+<div class="box">
+<h3>🏡 Adress</h3>
+<input type="text" id="adress" placeholder="Ex: Storgatan 12, Boxholm">
+</div>
 
-    <!-- Tjänst 2 -->
-    <div class="price-box">
-        <h3>🌱 Rensa ogräs</h3>
-        <p>Pris: 50 kr för 15 meter (måste väljas i jämna 15-tal)</p>
-        <div class="input-group">
-            <label for="ogras">Hur många meter?</label>
-            <input type="number" id="ogras" min="0" step="15" value="0" oninput="raknaUtPris()" onchange="valideraSteg(this, 15)">
-        </div>
-    </div>
+<!-- DATUM -->
+<div class="box">
+<h3>📅 Datum</h3>
+<input type="date" id="datum">
+</div>
 
-    <!-- Tjänst 3 -->
-    <div class="price-box">
-        <h3>💧 Vattna växter</h3>
-        <p>Pris: 30 kr för ALLA växter (använder ditt vatten)</p>
-        <div class="checkbox-group">
-            <input type="checkbox" id="vattna" onchange="raknaUtPris()">
-            <label for="vattna">Ja tack, vattna alla mina växter</label>
-        </div>
-    </div>
+<!-- TJÄNSTER -->
+<div class="box">
+<h3>💧 Vattna växter</h3>
+<label><input type="checkbox" id="vattna" onchange="rakna()"> 30 kr</label>
+</div>
 
-    <!-- Totalsumma -->
-    <div class="total-section">
-        <p>Din totalsumma att betala:</p>
-        <div class="total-price"><span id="summa">0</span> kr</div>
-    </div>
+<div class="box">
+<h3>🌱 Rensa ogräs (70 kr/timme)</h3>
+<input type="number" id="ogras" value="0" min="0" oninput="rakna()">
+</div>
 
-    <!-- Röd BETALA-knapp -->
-    <button class="btn-pay" onclick="oppnaSwish()">Betala Med Swish</button>
+<div class="box">
+<h3>✂️ Trimma trädgården (50 kr/timme)</h3>
+<input type="number" id="trim" value="0" min="0" oninput="rakna()">
+</div>
+
+<!-- TOTAL -->
+<div class="total">
+Totalt: <span id="summa">0</span> kr
+</div>
+
+<button onclick="betala()">Betala med Swish</button>
+
+<div class="success" id="klart">
+✅ Allt klart! Bokningen skickad!
+</div>
+
 </div>
 
 <script>
-    // 🛑 HÄR LÅSER DU DATUM FÖR ALLA!
-    const bokadeDatum = [
-        "2026-07-24",
-        "2026-07-25"
-    ];
+function rakna(){
+    let vattna = document.getElementById("vattna").checked ? 30 : 0;
+    let ogras = (document.getElementById("ogras").value || 0) * 70;
+    let trim = (document.getElementById("trim").value || 0) * 50;
 
-    // Sätter dagens datum som det tidigaste kunden kan välja
-    let idag = new Date().toISOString().split('T');
-    document.getElementById('datum').setAttribute('min', idag);
+    let total = vattna + ogras + trim;
+    document.getElementById("summa").innerText = total;
+}
 
-    function kollaBokatDatum() {
-        let valtDatum = document.getElementById('datum').value;
-        
-        if (bokadeDatum.includes(valtDatum)) {
-            alert("Tyvärr är jag redan bokad eller upptagen detta datum! Vänligen välj en annan dag.");
-            document.getElementById('datum').value = "";
-        }
+function betala(){
+    let fornamn = document.getElementById("fornamn").value.trim();
+    let efternamn = document.getElementById("efternamn").value.trim();
+    let adress = document.getElementById("adress").value.toLowerCase();
+    let datum = document.getElementById("datum").value;
+    let summa = document.getElementById("summa").innerText;
+
+    if(fornamn === "" || efternamn === ""){
+        alert("Du måste skriva förnamn och efternamn!");
+        return;
     }
 
-    // Funktion som avrundar manuellt inskrivna tal till närmaste godkända intervall
-    function valideraSteg(inputElement, steg) {
-        let värde = parseFloat(inputElement.value) || 0;
-        if (värde < 0) värde = 0;
-        
-        // Avrunda till närmaste godkända steg (t.ex. närmaste 10 eller 15)
-        let avrundat = Math.round(värde / steg) * steg;
-        inputElement.value = avrundat;
-        raknaUtPris();
+    if(!adress.includes("boxholm")){
+        alert("Adressen måste vara i Boxholm!");
+        return;
     }
 
-    function raknaUtPris() {
-        let trimMeter = parseFloat(document.getElementById('trim').value) || 0;
-        let ograsMeter = parseFloat(document.getElementById('ogras').value) || 0;
-        let villVattna = document.getElementById('vattna').checked;
-
-        let trimPris = (trimMeter / 10) * 20;
-        let ograsPris = (ograsMeter / 15) * 50;
-        let vattnaPris = villVattna ? 30 : 0;
-
-        let totalt = Math.round(trimPris + ograsPris + vattnaPris);
-        document.getElementById('summa').innerText = totalt;
+    if(datum === ""){
+        alert("Välj datum!");
+        return;
     }
 
-    function oppnaSwish() {
-        // Tvinga en extra validering av stegen innan betalning ifall de skrev manuellt precis innan klick
-        valideraSteg(document.getElementById('trim'), 10);
-        valideraSteg(document.getElementById('ogras'), 15);
-
-        let totaltBelopp = document.getElementById('summa').innerText;
-        let adressen = document.getElementById('adress').value.trim();
-        let valtDatum = document.getElementById('datum').value;
-        let telefonNummer = "0723782629";
-
-        if (adressen == "") {
-            alert("Du måste skriva in din adress i Boxholm för att kunna boka!");
-            return;
-        }
-
-        if (valtDatum == "") {
-            alert("Du måste välja ett datum i kalendern för när du vill ha hjälp!");
-            return;
-        }
-
-        if (totaltBelopp == "0") {
-            alert("Vänligen fyll i vad du vill ha hjälp med först!");
-            return;
-        }
-
-        let meddelandeText = "Trädgårdshjälp " + valtDatum + ", " + adressen;
-
-        let swishUrl = "swish://payment?data=" + JSON.stringify({
-            "version": 1,
-            "payee": { "value": telefonNummer },
-            "amount": { "value": parseInt(totaltBelopp) },
-            "message": { "value": meddelandeText }
-        });
-
-        window.location.href = swishUrl;
+    if(summa == 0){
+        alert("Välj minst en tjänst!");
+        return;
     }
+
+    let nummer = "0723782629";
+
+    let message = "Trädgårdshjälp - " + fornamn + " " + efternamn + ", " + datum;
+
+    let swish = "swish://payment?data=" + JSON.stringify({
+        version:1,
+        payee:{value:nummer},
+        amount:{value:parseInt(summa)},
+        message:{value:message}
+    });
+
+    window.location.href = swish;
+
+    document.getElementById("klart").style.display = "block";
+}
 </script>
 
 </body>
