@@ -109,7 +109,7 @@ button:hover {
 <!-- ADRESS -->
 <div class="box">
 <h3>🏡 Adress</h3>
-<input type="text" id="adress" placeholder="Ex: Storgatan 12, Boxholm">
+<input type="text" id="adress" placeholder="Ex: Storgatan 12">
 </div>
 
 <!-- DATUM -->
@@ -169,7 +169,7 @@ function betala(){
         return;
     }
 
-    if(!adress.includes("boxholm")){
+    if(!adress.includes("")){
         alert("Adressen måste vara i Boxholm!");
         return;
     }
